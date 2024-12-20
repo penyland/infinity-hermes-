@@ -1,0 +1,6 @@
+@Infinity.HelloWorld_HostAddress = http://localhost:5181
+
+GET {{Infinity.HelloWorld_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

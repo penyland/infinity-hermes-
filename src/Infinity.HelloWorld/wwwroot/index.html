@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base id="basePath" href="">
+    <title>To Infinity and Beyond!</title>
+    <link href="https://fonts.cdnfonts.com/css/cascadia-code" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cascadia Code', monospace;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: var(--background-color, #000);
+            color: var(--text-color, #0f0);
+        }
+
+        .console {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+            .console h1 {
+                margin: 0;
+                color: #0f0;
+                font-size: 1.5rem;
+            }
+
+            .console .prompt {
+                color: #0f0;
+                font-size: 1.5rem;
+            }
+
+        .footer {
+            margin-top: 4rem;
+            text-align: left;
+        }
+
+            .footer p {
+                font-weight: 400;
+                font-size: 1rem;
+                margin: 5px 0;
+                color: #0f0;
+            }
+
+        .cursor {
+            width: 10px;
+            height: 1.5rem;
+            background-color: #0f0;
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% {
+                opacity: 1;
+            }
+
+            50%, 100% {
+                opacity: 0;
+            }
+        }
+
+        /* Light theme */
+        @media (prefers-color-scheme: light) {
+            :root {
+                --background-color: #f0f0f0;
+                --text-color: #333;
+            }
+
+            .console h1,
+            .console .prompt,
+            .footer p {
+                color: #333;
+            }
+
+            .cursor {
+                color: #333;
+                background-color: #333;
+            }
+        }
+
+        /* Dark theme */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background-color: #004;
+                --text-color: #Ff0;
+            }
+
+            .console h1,
+            .console .prompt,
+            .footer p {
+                color: #ff0;
+            }
+
+            .cursor {
+                color: #ff0;
+                background-color: #ff0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="console">
+        <div class="prompt">
+            > <span id="hello-world">To Infinity and Beyond!</span>
+            <div class="footer">
+                <p id="api-version">Loading version...</p>
+                <p id="builddate">Loading build date...</p>
+                <p id="load-time">Loading time...</p>
+                <p id="os-version">Loading os-version...</p>
+                <p id="environment">Loading environment...</p>
+                <p id="framework-description">Loading framework description...</p>
+            </div>
+        </div>
+    </div>
+    <script>
+         document.addEventListener("DOMContentLoaded", function() {
+         fetch(window.location.href)
+             .then(response => {
+                 const prefix = response.headers.get('x-forwarded-prefix') || '';
+                 const apiUrl = `${prefix}/info/version`;
+
+                document.getElementById('basePath').setAttribute('href', prefix);
+
+                 return fetch(apiUrl);
+             })
+             .then(async response => {
+                    if (response.ok) {
+                        const data = await response.json();
+                        document.getElementById('hello-world').innerText = data.name;
+                        document.getElementById('api-version').innerText = `Version: ${data.version}`;
+                        document.getElementById('load-time').innerText = `DateTime: ${new Date(data.dateTime)}`;
+                        document.getElementById('os-version').innerText = `OS: ${data.osVersion}`;
+                        document.getElementById('builddate').innerText = `Built: ${data.buildDate}`;
+                        document.getElementById('environment').innerText = `Environment: ${data.environment}`;
+                        document.getElementById('framework-description').innerText = `Framework: ${data.frameworkDescription}`;
+                    } else {
+                        document.getElementById('api-version').innerText = 'Failed to load API version';
+                    }
+                })
+             .then(data => console.log(data))
+             .catch(error => console.error('Error:', error));
+         });
+    </script>
+</body>
+</html>
