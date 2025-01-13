@@ -10,16 +10,34 @@
         body {
             font-family: 'Cascadia Code', monospace;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             box-sizing: border-box;
             background-color: var(--background-color, #000);
             color: var(--text-color, #0f0);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
+
+        main {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        footer {
+            background-color: var(--background-color, #000);
+            color: var(--text-color, #0f0);
+            text-align: center;
+            padding: 10px;
+            position: sticky;
+            bottom: 0;
+        }
+
 
         .console {
             display: flex;
             flex-direction: column;
-            height: 100vh;
             padding: 20px;
             box-sizing: border-box;
         }
@@ -87,65 +105,71 @@
         /* Dark theme */
         @media (prefers-color-scheme: dark) {
             :root {
-                --background-color: #004;
-                --text-color: #Ff0;
+                --background-color: #1F1D45;
+                --text-color: #Ffffff;
             }
 
             .console h1,
             .console .prompt,
             .footer p {
-                color: #ff0;
+                color: #Ffffff;
             }
 
             .cursor {
-                color: #ff0;
-                background-color: #ff0;
+                color: #Ffffff;
+                background-color: #Ffffff;
             }
         }
     </style>
 </head>
 <body>
-    <div class="console">
-        <div class="prompt">
-            > <span id="hello-world">To Infinity and Beyond!</span>
-            <div class="footer">
-                <p id="api-version">Loading version...</p>
-                <p id="builddate">Loading build date...</p>
-                <p id="load-time">Loading time...</p>
-                <p id="os-version">Loading os-version...</p>
-                <p id="environment">Loading environment...</p>
-                <p id="framework-description">Loading framework description...</p>
+    <main>
+
+        <div class="console">
+            <div class="prompt">
+                > <span id="hello-world">To Infinity and Beyond!</span>
+                <div class="footer">
+                    <p id="api-version">Loading version...</p>
+                    <p id="builddate">Loading build date...</p>
+                    <p id="load-time">Loading time...</p>
+                    <p id="os-version">Loading os-version...</p>
+                    <p id="environment">Loading environment...</p>
+                    <p id="framework-description">Loading framework description...</p>
+                </div>
             </div>
         </div>
-    </div>
-    <script>
-         document.addEventListener("DOMContentLoaded", function() {
-         fetch(window.location.href)
-             .then(response => {
-                 const prefix = response.headers.get('x-forwarded-prefix') || '';
-                 const apiUrl = `${prefix}/info/version`;
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+            fetch(window.location.href)
+                .then(response => {
+                    const prefix = response.headers.get('x-forwarded-prefix') || '';
+                    const apiUrl = `${prefix}/info/version`;
 
-                document.getElementById('basePath').setAttribute('href', prefix);
+                   document.getElementById('basePath').setAttribute('href', prefix);
 
-                 return fetch(apiUrl);
-             })
-             .then(async response => {
-                    if (response.ok) {
-                        const data = await response.json();
-                        document.getElementById('hello-world').innerText = data.name;
-                        document.getElementById('api-version').innerText = `Version: ${data.version}`;
-                        document.getElementById('load-time').innerText = `DateTime: ${new Date(data.dateTime)}`;
-                        document.getElementById('os-version').innerText = `OS: ${data.osVersion}`;
-                        document.getElementById('builddate').innerText = `Built: ${data.buildDate}`;
-                        document.getElementById('environment').innerText = `Environment: ${data.environment}`;
-                        document.getElementById('framework-description').innerText = `Framework: ${data.frameworkDescription}`;
-                    } else {
-                        document.getElementById('api-version').innerText = 'Failed to load API version';
-                    }
+                    return fetch(apiUrl);
                 })
-             .then(data => console.log(data))
-             .catch(error => console.error('Error:', error));
-         });
-    </script>
+                .then(async response => {
+                       if (response.ok) {
+                           const data = await response.json();
+                           document.getElementById('hello-world').innerText = data.name;
+                           document.getElementById('api-version').innerText = `Version: ${data.version}`;
+                           document.getElementById('load-time').innerText = `DateTime: ${new Date(data.dateTime)}`;
+                           document.getElementById('os-version').innerText = `OS: ${data.osVersion}`;
+                           document.getElementById('builddate').innerText = `Built: ${data.buildDate}`;
+                           document.getElementById('environment').innerText = `Environment: ${data.environment}`;
+                           document.getElementById('framework-description').innerText = `Framework: ${data.frameworkDescription}`;
+                       } else {
+                           document.getElementById('api-version').innerText = 'Failed to load API version';
+                       }
+                   })
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+            });
+        </script>
+    </main>
+    <footer class="footer">
+        Copyright &copy; 2025 Peter Nylander
+    </footer>
 </body>
 </html>
