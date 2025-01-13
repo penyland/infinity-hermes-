@@ -9,6 +9,9 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 
 builder.AddFeatureModules();
 builder.Services.AddHealthChecks();
+builder.Services.AddAuthentication().AddJwtBearer();
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -30,6 +33,8 @@ app.Use(async (context, next) =>
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
+
+app.UseAuthorization();
 
 app.MapHealthChecks("/health");
 app.MapFeatureModules();

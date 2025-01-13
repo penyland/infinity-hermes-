@@ -9,7 +9,7 @@ public class InfoModule : WebFeatureModule
 {
     public override IModuleInfo? ModuleInfo { get; }
 
-    public override void MapEndpoints(IEndpointRouteBuilder builder) => builder.MapInfoEndpoints();
+    public override void MapEndpoints(WebApplication builder) => builder.MapInfoEndpoints();
 
     public override ModuleContext RegisterModule(ModuleContext featureModuleContext) => featureModuleContext;
 }

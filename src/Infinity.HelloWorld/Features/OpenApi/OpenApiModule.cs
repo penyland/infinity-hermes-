@@ -65,7 +65,7 @@ public class OpenApiModule : IWebFeatureModule
     {
     }
 
-    public void MapEndpoints(IEndpointRouteBuilder builder)
+    public void MapEndpoints(WebApplication builder)
     {
         builder.MapOpenApi();
         builder.MapScalarApiReference();
